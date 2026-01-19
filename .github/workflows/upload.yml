@@ -1,0 +1,26 @@
+name: YouTube Auto Upload
+
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install deps
+        run: pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Upload video
+        env:
+          CLIENT_SECRET_JSON: ${{ secrets.CLIENT_SECRET_JSON }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: python upload.py
